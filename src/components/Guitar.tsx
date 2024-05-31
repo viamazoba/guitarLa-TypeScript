@@ -1,7 +1,14 @@
-export const Guitar = ({
+import type { Guitar } from '../types/index.ts'
+
+type GuitarProps = {
+  guitar: Guitar
+  addToCart: (item: Guitar) => void
+}
+
+export function Guitar  ({
     guitar,
     addToCart
-})=> {
+}: GuitarProps ) {
     const { 
         name, 
         price, 

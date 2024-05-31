@@ -1,3 +1,13 @@
+import type { CartItem, Guitar } from '../types/index'
+type HeaderProps = {
+  cart: CartItem[]
+  deleteFromCart: (id: Guitar['id']) => void
+  increaseQuantity:  (id: Guitar['id']) => void
+  decreaseQuantity: (id: Guitar['id']) => void
+  clearCart: ()=> void
+  isEmpty: boolean
+  cartTotal: number
+}
 
 export const Header = ({
     cart,
@@ -7,7 +17,7 @@ export const Header = ({
     clearCart,
     isEmpty,
     cartTotal
-})=> {
+}: HeaderProps )=> {
 
     return(
         <header className="py-5 header">

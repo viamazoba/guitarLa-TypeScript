@@ -1,8 +1,10 @@
 import { useEffect, useState, useMemo } from 'react'
 import { db } from '../data/db'
+import type { Guitar, CartItem, GuitarID } from '../types'
 
 export const useCart = () => {
-    const initialCart = () => {
+
+    const initialCart = (): CartItem[] => {
         const actualCart = localStorage.getItem('cart');
         return actualCart ? JSON.parse(actualCart) : []
     }
@@ -12,27 +14,28 @@ export const useCart = () => {
     const MIN_ITEMS = 1;
 
 
-    const handleAddToCart = (item) => {
+    const handleAddToCart = (item: Guitar ) => {
         const indexItemExist = cart.findIndex(element => {
             return item.id === element.id
         })
 
         if (indexItemExist === -1) {
-            item.quantity = 1
-            setCart([...cart, item])
+            const newItem: CartItem = {...item, quantity: 1}
+            newItem.quantity = 1
+            setCart([...cart, newItem])
         } else {
-            if (item.quantity >= MAX_ITEMS) return
+            if (cart[indexItemExist].quantity >= MAX_ITEMS) return
             const newCart = [...cart]
             newCart[indexItemExist].quantity++
             setCart([...newCart])
         }
     }
 
-    function deleteFromCart(id) {
+    function deleteFromCart(id: GuitarID) {
         setCart(prevCart => prevCart.filter(guitar => guitar.id !== id))
     }
 
-    function increaseQuantity(id) {
+    function increaseQuantity(id: GuitarID) {
         const newCart = cart.map(item => {
             if (item.id === id && item.quantity < MAX_ITEMS) {
                 return {
@@ -46,7 +49,7 @@ export const useCart = () => {
         setCart([...newCart])
     }
 
-    function decreaseQuantity(id) {
+    function decreaseQuantity(id: GuitarID) {
         const newCart = cart.map(guitar => {
             if (guitar.id === id && guitar.quantity > MIN_ITEMS) {
                 return {
@@ -70,7 +73,7 @@ export const useCart = () => {
     }, [cart])
 
     useEffect(() => {
-        const carts = JSON.parse(localStorage.getItem('cart'))
+        const carts = JSON.parse(localStorage.getItem('cart')!)
         if (carts) {
             setCart(carts)
         }
@@ -83,8 +86,8 @@ export const useCart = () => {
     }, 0), [cart])
 
     return {
-        cart,
         data,
+        cart,
         handleAddToCart,
         deleteFromCart,
         increaseQuantity,
